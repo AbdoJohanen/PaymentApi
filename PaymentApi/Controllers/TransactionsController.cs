@@ -8,8 +8,6 @@ namespace PaymentApi.Controllers;
 [Route("accounts/{iban}/transactions")]
 public class TransactionsController : ControllerBase
 {
-    private static List<Transaction> _transactions = new List<Transaction>();
-
     [HttpGet]
     public IActionResult GetTransactions(string iban)
     {

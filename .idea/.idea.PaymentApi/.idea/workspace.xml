@@ -11,7 +11,7 @@
   <component name="ChangeListManager">
     <list default="true" id="b9b1773b-4a7c-441d-8b41-a1c762a20746" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.PaymentApi/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.PaymentApi/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PaymentApi/Controllers/PaymentsController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/PaymentApi/Controllers/PaymentsController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PaymentApi/Controllers/TransactionsController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/PaymentApi/Controllers/TransactionsController.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/PaymentApi/Models/PaymentRequest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/PaymentApi/Models/PaymentRequest.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -134,7 +134,7 @@
       <workItem from="1713944103255" duration="2495000" />
       <workItem from="1713989376263" duration="5271000" />
       <workItem from="1714034071024" duration="1293000" />
-      <workItem from="1714041071735" duration="1135000" />
+      <workItem from="1714041071735" duration="1880000" />
     </task>
     <servers />
   </component>
