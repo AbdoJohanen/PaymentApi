@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using System.Globalization;
 using Microsoft.AspNetCore.Mvc;
 using PaymentApi.Models;
 using PaymentApi.Services;
@@ -37,25 +38,33 @@ public class PaymentsController : ControllerBase
             await Task.Delay(2000);
 
             var paymentId = Guid.NewGuid().ToString();
-            var transaction = new Transaction
+            if (decimal.TryParse(paymentRequest.InstructedAmount, NumberStyles.Any, CultureInfo.InvariantCulture, out var transactionAmount))
             {
-                PaymentID = paymentId,
-                DebtorAccount = paymentRequest.DebtorAccount,
-                CreditorAccount = paymentRequest.CreditorAccount,
-                TransactionAmount = paymentRequest.InstructedAmount,
-                Currency = paymentRequest.Currency
-            };
-            
-            DataStore.TransactionsByIban.AddOrUpdate(
-                paymentRequest.DebtorAccount,
-                new List<Transaction> { transaction },
-                (key, existingVal) =>
+                var transaction = new Transaction
                 {
-                    existingVal.Add(transaction);
-                    return existingVal;
-                });
+                    PaymentID = paymentId,
+                    DebtorAccount = paymentRequest.DebtorAccount,
+                    CreditorAccount = paymentRequest.CreditorAccount,
+                    TransactionAmount = transactionAmount,
+                    Currency = paymentRequest.Currency
+                };
+                
+                DataStore.TransactionsByIban.AddOrUpdate(
+                    paymentRequest.DebtorAccount,
+                    new List<Transaction> { transaction },
+                    (key, existingVal) =>
+                    {
+                        existingVal.Add(transaction);
+                        return existingVal;
+                    });
 
-            return Ok(transaction);
+                return Ok(transaction);
+            }
+            else
+            {
+                return BadRequest("Instructed Amount must be a valid decimal number with up to 14 digits and optionally up to 3 decimal places.");
+
+            }
         }
         finally
         {

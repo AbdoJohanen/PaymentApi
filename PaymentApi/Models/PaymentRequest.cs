@@ -14,7 +14,7 @@ public class PaymentRequest
 
     [Required]
     [RegularExpression(@"^(\d{1,14})(\.\d{1,3})?$", ErrorMessage = "Instructed Amount must be a valid number with up to 14 digits and optionally up to 3 decimal places.")]
-    public decimal InstructedAmount { get; set; }
+    public string InstructedAmount { get; set; }
 
     [Required]
     [RegularExpression(@"^[A-Z]{3}$", ErrorMessage = "Currency must be an ISO 4217 Alpha 3 currency code.")]
