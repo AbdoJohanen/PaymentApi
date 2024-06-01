@@ -35,10 +35,9 @@ public class PaymentsController : ControllerBase
 
         try
         {
-            await Task.Delay(2000);
-
             var paymentId = Guid.NewGuid().ToString();
-            if (decimal.TryParse(paymentRequest.InstructedAmount, NumberStyles.Any, CultureInfo.InvariantCulture, out var transactionAmount))
+            if (decimal.TryParse(paymentRequest.InstructedAmount, NumberStyles.Any, CultureInfo.InvariantCulture,
+                    out var transactionAmount))
             {
                 var transaction = new Transaction
                 {
@@ -48,27 +47,35 @@ public class PaymentsController : ControllerBase
                     TransactionAmount = transactionAmount,
                     Currency = paymentRequest.Currency
                 };
-                
-                DataStore.TransactionsByIban.AddOrUpdate(
-                    paymentRequest.DebtorAccount,
-                    new List<Transaction> { transaction },
-                    (key, existingVal) =>
-                    {
-                        existingVal.Add(transaction);
-                        return existingVal;
-                    });
+
+                Task.Run(async () =>
+                {
+                    await Task.Delay(2000);
+
+                    DataStore.TransactionsByIban.AddOrUpdate(
+                        paymentRequest.DebtorAccount,
+                        new List<Transaction> { transaction },
+                        (key, existingVal) =>
+                        {
+                            existingVal.Add(transaction);
+                            return existingVal;
+                        });
+
+                    _paymentProcessingStates.TryTake(out _);
+                });
 
                 return Ok(transaction);
             }
             else
             {
-                return BadRequest("Instructed Amount must be a valid decimal number with up to 14 digits and optionally up to 3 decimal places.");
+                return BadRequest(
+                    "Instructed Amount must be a valid decimal number with up to 14 digits and optionally up to 3 decimal places.");
 
             }
         }
-        finally
+        catch
         {
-            _paymentProcessingStates.TryTake(out _);
+            return BadRequest("Something went wrong please try again.");
         }
     }
 }
